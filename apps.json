@@ -1,0 +1,11 @@
+{
+  "vibedeck": {
+    "type": "electron",
+    "title": "VibeDeck",
+    "path": "C:/Users/derek/OneDrive/Desktop/builds/app ideas in build/vibedeck",
+    "profile": "%APPDATA%/vibedeck",
+    "accent": "#ffd400",
+    "settle": 9000,
+    "skip": "[data-n], [data-act], [data-open], [data-signin], #railToggle, #modelsBtn, #judgeBtn, #broadcastBtn, #stopRoundBtn, #cwdGo, #cwdAdd, #cwdBrowse, #gateGo, #gateBrowse, #dockAdd, #rail, .pane, .toast, #plRun, #plSave, #plDelete, #plAdd, .example"
+  }
+}
