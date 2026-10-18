@@ -9,26 +9,38 @@ echo.
 echo   SnapTour - screenshots every page of an app or website
 echo   Saves to Desktop\Screenshots\SnapTour\
 echo.
-echo   1  A website            (menusparks.com, localhost:3001, any link)
-echo   2  A saved desktop app  (vibedeck)
-echo   3  Any program          (you click around, it snaps each new screen)
-echo   4  Open the Screenshots folder
-echo   5  Quit
+echo   1  Open the SnapTour app window
+echo   2  A website            (menusparks.com, localhost:3001, any link)
+echo   3  A saved desktop app  (vibedeck)
+echo   4  Any program          (you click around, it snaps each new screen)
+echo   5  Open the Screenshots folder
+echo   6  Put a SnapTour icon on the desktop
+echo   7  Quit
 echo.
-set /p pick=  Pick 1-5:
+set /p pick=  Pick 1-7:
 
-if "%pick%"=="1" goto web
-if "%pick%"=="2" goto app
-if "%pick%"=="3" goto watch
-if "%pick%"=="4" goto folder
-if "%pick%"=="5" exit /b
+if "%pick%"=="1" goto window
+if "%pick%"=="2" goto web
+if "%pick%"=="3" goto app
+if "%pick%"=="4" goto watch
+if "%pick%"=="5" goto folder
+if "%pick%"=="6" goto install
+if "%pick%"=="7" exit /b
 goto menu
+
+:window
+node snaptour.mjs app
+exit /b
 
 :web
 echo.
 set /p site=  Website address:
 set /p fname=  Folder name (Enter = use the site name):
-if "%fname%"=="" (node snaptour.mjs %site%) else (node snaptour.mjs %site% --name "%fname%")
+set share=
+set /p share=  Also make images for x,discord,github,linkedin,instagram,og or all (Enter = none):
+set opts=
+if not "%share%"=="" set opts=--for %share%
+if "%fname%"=="" (node snaptour.mjs %site% %opts%) else (node snaptour.mjs %site% --name "%fname%" %opts%)
 pause
 goto menu
 
@@ -51,6 +63,10 @@ pause
 goto menu
 
 :folder
-if not exist "%USERPROFILE%\OneDrive\Desktop\Screenshots\SnapTour" mkdir "%USERPROFILE%\OneDrive\Desktop\Screenshots\SnapTour"
-start "" "%USERPROFILE%\OneDrive\Desktop\Screenshots\SnapTour"
+node snaptour.mjs folder
+goto menu
+
+:install
+node snaptour.mjs install
+pause
 goto menu

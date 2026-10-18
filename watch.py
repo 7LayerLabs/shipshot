@@ -17,6 +17,9 @@ from datetime import datetime
 
 from PIL import Image, ImageChops, ImageGrab, ImageStat
 
+# Window titles can hold any character; don't let one crash the printout when it is piped.
+sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+
 user32 = ctypes.windll.user32
 try:
     ctypes.windll.shcore.SetProcessDpiAwareness(2)  # real pixel sizes on scaled displays
