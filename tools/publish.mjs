@@ -1,4 +1,4 @@
-// Publishes a clean copy of Shipshot to the public repo github.com/dbtech45/shipshot.
+// Publishes a clean copy of Shipshot to the public repo github.com/dbtech45/Shipshot.
 // The copy is `git archive HEAD`, so whatever .gitattributes marks export-ignore
 // (your tasks/ notes and your own apps.json) never leaves this PC.
 //
@@ -11,7 +11,7 @@ import path from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 
-const REPO = 'dbtech45/shipshot';
+const REPO = 'dbtech45/Shipshot';
 const AUTHOR = ['DBTech45', '282960278+dbtech45@users.noreply.github.com'];
 const HERE = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
 const WORK = path.join(process.env.LOCALAPPDATA || os.homedir(), 'Shipshot', 'public-repo');
