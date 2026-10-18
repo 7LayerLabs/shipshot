@@ -1,0 +1,15 @@
+{
+  "mysite": {
+    "type": "website",
+    "title": "My Site",
+    "url": "https://example.com",
+    "accent": "#1f3fd1"
+  },
+  "myapp": {
+    "type": "electron",
+    "title": "My App",
+    "path": "C:/path/to/my-electron-app",
+    "profile": "%APPDATA%/my-electron-app",
+    "skip": "#deleteButton, .danger"
+  }
+}

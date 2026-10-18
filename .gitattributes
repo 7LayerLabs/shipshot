@@ -1,0 +1,3 @@
+# Left out of the public copy that tools/publish.mjs makes (git archive honours these)
+tasks/ export-ignore
+apps.json export-ignore

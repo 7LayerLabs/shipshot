@@ -1,3 +1,42 @@
+# Shipshot rebrand, pro look, landing site (2026-10-18; built, waiting for Derek's OK to push and deploy)
+
+Decided with Derek: name is **Shipshot** (a different product, "Shipshots" at shipshots.app, makes App Store images; small confusion risk accepted). Scope is a polished app + marketing site, no accounts/billing. No domain for now (useshipshot.com $11.25/yr, shipshot.co $29.99 then $24.80/yr); the page lives at dbtech45.com/shipshot. Shipshot is given away free.
+
+### 1. Logo
+- [x] Round 1 (3 concepts) was rejected as too "vibecoded". Round 2: 9 marks shown in context (browser tab, desktop icon, site header, light/dark). Derek picked **C3, the slotted block**: reads as an S and as three stacked screens. Cyanotype blue `#1f3fd1`, ink `#14161a`; wordmark is Archivo Expanded ExtraBold turned into outlines.
+- [x] Final set in `assets/`: logo (+white, ink), icon tile, wordmark (+white), lockup (+white), `shipshot.ico`, `icon.png`, Archivo font (OFL). `tools/make-icon.mjs` rebuilds the icon files. 1200x630 social card at `site/shipshot/og.png`.
+
+### 2. Rename SnapTour -> Shipshot
+- [x] `shipshot.mjs`, `Shipshot.bat`, help, README, package.json (`bin`, description). New `Setup.bat`: checks for Node.js (opens nodejs.org if missing), npm install, shortcuts, opens the app.
+- [x] Output `Desktop\Screenshots\Shipshot`; the old SnapTour folder moves over by itself (Derek's soulclaw-co run moved fine). `SNAPTOUR_OUT` still read. App data `%LOCALAPPDATA%\Shipshot`.
+- [x] Desktop and Start-menu shortcuts replaced; `install` removes the old SnapTour ones.
+- [ ] Rename the GitHub repo to `7LayerLabs/shipshot`. Not done: waits for Derek's OK with the push. Local folder `C:\Users\Derek\snaptour` keeps its name for now.
+
+### 3. App looks like a product
+- [x] Sidebar: New capture, Library (search), Saved apps, Settings. UI is now real files: `ui/index.html`, `ui/app.css`, `ui/app.js` (was a generated string in `lib/app-ui.mjs`, deleted). Light and dark.
+- [x] Run page in the app: tabs Ready to post / Screens / Phone / Promo images / Contact sheets; Copy (PNG to clipboard, verified 1600x900) and Save on every image; viewer with arrow keys that walks a long page's sections.
+- [x] Progress in stages: Pages, Tabs and dialogs, Phone shots, Post-ready images; log under "Show details".
+- [x] Gallery `index.html` carries the Shipshot mark.
+- [x] (Derek) Delete from the Library card or the run page: Recycle Bin, after an in-app confirm. Tested: cancel keeps it, confirm removes it.
+- [x] (Derek) Settings: "Save captures to", Browse (Windows folder picker), move existing captures. `%LOCALAPPDATA%\Shipshot\settings.json` (BOM-tolerant); `SHIPSHOT_OUT` overrides and the page says so. Tested in an isolated copy: bad path rejected, move works.
+- [x] Bug: deeper clicks re-clicked the parent's own filters with a panel open (dozens of near-copies on dbtech45.com). Deeper screens now only click what their click revealed. Test site 30s -> 22s.
+- [x] Post images skip dull pages (privacy, terms, login, register...) unless nothing else is left. Labels use real page titles ("86'd", not "86 d").
+
+### 4. Landing page at dbtech45.com/shipshot
+- [x] `site/shipshot/` static page (hero app shot, long page vs ten readable screens, X/Instagram/Discord/GitHub images, how it works, safety, FAQ, download). All images real, from a dbtech45.com capture (664 KB). Checked at 1440 and 390 wide, no sideways scroll.
+- [x] Deployed as its own Vercel project `shipshot` (team thetradingdads-projects): https://shipshot-chi.vercel.app/shipshot. Deploy from a git-less copy (`vercel deploy --prod` in a folder copied from `site/`).
+- [x] dbtech45.com repo (`C:/Users/Derek/orca/dbtech45.com`, pulled to f1c12e4): `/shipshot` rewrites in `next.config.ts` + Shipshot listing in AI & creative tools (`src/data/studio-projects.ts`), same pattern as Fine Print. UNCOMMITTED. Pushing master auto-deploys the live site.
+
+### 5. Check it
+- [x] Full capture with the final code (test site 22s, all screens, off-site skip). App launched from the new shortcut path; every view screenshotted light and dark; no page errors.
+- [ ] Derek: try Browse in Settings, paste a copied image into Discord/X, run Setup.bat on a clean folder after the push.
+
+### Waiting on Derek
+1. Commit + push `shipshot-rebrand`, merge PR #1 and this into main, rename the repo to `shipshot`. The page's Download link is `github.com/7LayerLabs/shipshot/archive/refs/heads/main.zip`, which needs both.
+2. Commit + push the dbtech45 change (it goes live).
+
+---
+
 # DONE 2026-10-18: fully working, much faster, readable shots, desktop app, share sizes
 
 Baseline measured 2026-10-18 on the current code:

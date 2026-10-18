@@ -1,4 +1,4 @@
-// Builds assets/logo.png and assets/snaptour.ico from assets/logo.svg.
+// Builds assets/icon.png and assets/shipshot.ico from assets/icon.svg.
 // Run after changing the logo: node tools/make-icon.mjs
 import fs from 'node:fs';
 import path from 'node:path';
@@ -7,7 +7,7 @@ import { launchBrowser } from '../lib/web.mjs';
 
 const ASSETS = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', 'assets');
 const SIZES = [16, 20, 24, 32, 40, 48, 64, 128, 256];
-const svg = fs.readFileSync(path.join(ASSETS, 'logo.svg'), 'utf8');
+const svg = fs.readFileSync(path.join(ASSETS, 'icon.svg'), 'utf8');
 
 const browser = await launchBrowser(false);
 const page = await browser.newPage();
@@ -17,7 +17,7 @@ const png = async size => {
   return page.screenshot({ omitBackground: true });
 };
 
-fs.writeFileSync(path.join(ASSETS, 'logo.png'), await png(512));
+fs.writeFileSync(path.join(ASSETS, 'icon.png'), await png(512));
 
 // An .ico is a small header, one directory entry per size, then the PNG files themselves.
 const images = [];
@@ -36,6 +36,6 @@ images.forEach((img, i) => {
   head.writeUInt32LE(offset, e + 12);
   offset += img.length;
 });
-fs.writeFileSync(path.join(ASSETS, 'snaptour.ico'), Buffer.concat([head, ...images]));
+fs.writeFileSync(path.join(ASSETS, 'shipshot.ico'), Buffer.concat([head, ...images]));
 await browser.close();
-console.log('  wrote assets/logo.png and assets/snaptour.ico');
+console.log('  wrote assets/icon.png and assets/shipshot.ico');

@@ -1,40 +1,50 @@
-# SnapTour
+<img src="assets/lockup.svg" alt="Shipshot" height="36">
 
-Screenshots every page and screen of a website, an Electron desktop app, or any Windows program, then builds a gallery, promo images, contact sheets and images sized for X, Discord, GitHub, LinkedIn and Instagram.
+Screenshots every page and screen of a website, an Electron desktop app, or any Windows program, then gives you readable screen-sized shots plus images sized for X, Discord, GitHub, LinkedIn and Instagram. Free, Windows only. Page: https://dbtech45.com/shipshot
 
 ## Setup
 
-Needs Node 20+, Google Chrome or Microsoft Edge, and (for watch mode) Python 3 with Pillow.
+Needs Windows 10 or 11, Node.js 20+, Google Chrome or Microsoft Edge, and (for watch mode only) Python 3 with Pillow.
+
+Download and unzip, then double-click **Setup.bat**. It installs what Shipshot needs, puts a Shipshot icon on the desktop and in the Start menu, and opens the app. By hand:
 
 ```
 npm install
-node snaptour.mjs install     # SnapTour icon on the desktop and in the Start menu
+node shipshot.mjs install     # desktop and Start-menu shortcuts
+node shipshot.mjs app         # open the app
 ```
 
 ## The app
 
-Double-click the **SnapTour** desktop icon (or run `node snaptour.mjs app`). A window opens: type a site or pick a saved app, tick the platforms you want images for, press Start and watch it work. Past runs are listed underneath; click one to open its gallery. Closing the window stops SnapTour.
+Double-click the **Shipshot** icon. The window has four places:
+
+- **New capture**: type a site, `localhost:3001` or a saved app (or switch to *Any program*), tick where you want to post, press Start capture. Progress shows pages, tabs and dialogs, phone shots and post-ready images as they happen.
+- **Library**: every capture. Open one to see *Ready to post*, *Screens*, *Phone*, *Promo images* and *Contact sheets*. **Copy** puts an image on the clipboard to paste into X or Discord; **Save** downloads it. Delete moves a capture to the Recycle Bin.
+- **Saved apps**: the entries in `apps.json`.
+- **Settings**: where captures are saved, with Browse and an option to move existing captures.
+
+Closing the window stops Shipshot.
 
 ## Command line
 
 ```
-node snaptour.mjs menusparks.com              # a website: every page, plus tabs, menus and dialogs
-node snaptour.mjs menusparks.com --for x,discord   # also make images sized for X and Discord
-node snaptour.mjs http://localhost:3001       # a local app
-node snaptour.mjs vibedeck                    # a desktop app saved in apps.json
-node snaptour.mjs watch VibeDeck              # any program: you click, it snaps each new screen (F8 shot, F10 done)
-node snaptour.mjs list                        # saved apps and past runs
-node snaptour.mjs gallery <run folder> --for all  # rebuild gallery, promo and share images for an old run
-node snaptour.mjs folder                      # open the Screenshots folder
+node shipshot.mjs yoursite.com                # a website: every page, plus tabs, menus and dialogs
+node shipshot.mjs yoursite.com --for x,discord     # also make images sized for X and Discord
+node shipshot.mjs http://localhost:3001       # a local app
+node shipshot.mjs myapp                       # a desktop app or site saved in apps.json
+node shipshot.mjs watch Photoshop             # any program: you click, it snaps each new screen (F8 shot, F10 done)
+node shipshot.mjs list                        # saved apps and past runs
+node shipshot.mjs gallery <run folder> --for all  # rebuild gallery, promo and share images for an old run
+node shipshot.mjs folder                      # open the Screenshots folder
 ```
 
-`SnapTour.bat` gives the same choices as a menu.
+`Shipshot.bat` gives the same choices as a menu.
 
 Options: `--name`, `--for <x,discord,github,linkedin,instagram,og|all>`, `--max`, `--depth`, `--minutes`, `--workers` (tabs at once, default 4), `--sections <n>` (screens per long page, default 10), `--no-sections`, `--no-clicks`, `--no-mobile`, `--no-promo`, `--accent <color>`, `--headed`, `--no-open`.
 
 ## Output
 
-`Desktop\Screenshots\SnapTour\<name>\<date_time>\`
+`Desktop\Screenshots\Shipshot\<name>\<date_time>\`
 
 - `screens/` every page (top of the page) and every clicked screen
 - `sections/` the rest of each long page, one screen at a time (no zooming out to read a giant image)
@@ -55,17 +65,25 @@ Options: `--name`, `--for <x,discord,github,linkedin,instagram,og|all>`, `--max`
 - `index.html` gallery (arrow keys step down a long page, then on to the next)
 - `shots.json` list of shots
 
-Set `SNAPTOUR_OUT` to save somewhere else.
+Change the folder in Settings (stored in `%LOCALAPPDATA%\Shipshot\settings.json`), or set `SHIPSHOT_OUT`, which wins over Settings.
 
 ## Saved apps (`apps.json`)
 
+Sites and desktop apps you capture often. Copy `apps.example.json` to `apps.json` (or press **Edit apps.json** in the app, which does it for you) and change the entries:
+
 ```json
 {
-  "vibedeck": { "type": "electron", "title": "VibeDeck", "path": "C:/Users/Derek/vibedeck", "profile": "%APPDATA%/vibedeck", "skip": "#runBtn" },
-  "menusparks": { "type": "website", "url": "https://menusparks.com", "title": "MenuSparks", "accent": "#ff6a00" }
+  "mysite": { "type": "website", "title": "My Site", "url": "https://example.com", "accent": "#1f3fd1" },
+  "myapp": { "type": "electron", "title": "My App", "path": "C:/path/to/my-electron-app", "profile": "%APPDATA%/my-electron-app", "skip": "#deleteButton, .danger" }
 }
 ```
 
+`skip` lists CSS selectors for controls Shipshot must never click. `apps.json` is yours and is never shared.
+
+## Your accounts and keys
+
+Shipshot does not use any online service, API key or subscription. Everything runs on your PC with your own Chrome or Edge, and nothing is uploaded.
+
 ## Safety
 
-SnapTour never types. It skips buttons whose labels mean an action (save, send, delete, run, buy, sign in, sign up, hide, toggle and more), skips submit buttons, dismisses every confirm box and never photographs pages on another site (a login redirect, say). Desktop apps run as a separate copy on a throwaway copy of their profile, with opening the browser, file pickers and message boxes switched off. Each app in `apps.json` can list extra `skip` selectors for controls that do things. The app window only answers itself: it listens on 127.0.0.1 with a secret token.
+Shipshot never types. It skips buttons whose labels mean an action (save, send, delete, run, buy, sign in, sign up, hide, toggle and more), skips submit buttons, dismisses every confirm box and never photographs pages on another site (a login redirect, say). Desktop apps run as a separate copy on a throwaway copy of their profile, with opening the browser, file pickers and message boxes switched off. Each app in `apps.json` can list extra `skip` selectors for controls that do things. The app window only answers itself: it listens on 127.0.0.1 with a secret token.

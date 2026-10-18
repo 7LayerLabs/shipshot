@@ -1,6 +1,6 @@
 #!/usr/bin/env node
-// SnapTour: point it at a website, a saved desktop app, or any open window and it
-// photographs every screen into Desktop\Screenshots\SnapTour\<name>\<date>\.
+// Shipshot: point it at a website, a saved desktop app, or any open window and it
+// photographs every screen into Desktop\Screenshots\Shipshot\<name>\<date>\.
 import fs from 'node:fs';
 import path from 'node:path';
 import { spawnSync, exec } from 'node:child_process';
@@ -15,20 +15,20 @@ const HERE = path.dirname(fileURLToPath(import.meta.url));
 const APPS_FILE = path.join(HERE, 'apps.json');
 
 const HELP = `
-  SnapTour - screenshots every page and screen of an app or website
+  Shipshot - screenshots every page and screen of an app or website
 
-  snaptour app                    open the SnapTour window (what the desktop icon does)
-  snaptour <website>              menusparks.com, https://..., http://localhost:3001
-  snaptour <saved app>            vibedeck   (desktop apps and websites listed in apps.json)
-  snaptour <electron folder|exe>  any Electron app folder
-  snaptour watch [window title]   ANY program: you click around, it snaps each new screen
-  snaptour list                   show saved apps and past runs
-  snaptour gallery <run folder>   rebuild the gallery, promo and share images for a run
-  snaptour folder                 open the Screenshots folder
-  snaptour install                put a SnapTour icon on the desktop and in the Start menu
+  shipshot app                    open the Shipshot window (what the desktop icon does)
+  shipshot <website>              yoursite.com, https://..., http://localhost:3001
+  shipshot <saved app>            myapp      (desktop apps and websites listed in apps.json)
+  shipshot <electron folder|exe>  any Electron app folder
+  shipshot watch [window title]   ANY program: you click around, it snaps each new screen
+  shipshot list                   show saved apps and past runs
+  shipshot gallery <run folder>   rebuild the gallery, promo and share images for a run
+  shipshot folder                 open the Screenshots folder
+  shipshot install                put a Shipshot icon on the desktop and in the Start menu
 
   options
-    --name <folder>   name of the folder inside Screenshots\\SnapTour (default: site or app name)
+    --name <folder>   name of the folder inside Screenshots\\Shipshot (default: site or app name)
     --for <list>      also make images sized for: ${Object.keys(SHARE).join(', ')}  (or "all")
     --max <n>         most pages to visit on a website (default 40)
     --depth <n>       how many clicks deep to explore each page (default 2)
@@ -109,7 +109,7 @@ async function captureSite(target, o, preset = {}) {
   if (!normalize(url)) throw new Error(`Not a website, saved app, or folder: ${target}`);
   const u = new URL(url);
   const name = o.name || preset.folder || slug(u.hostname.replace(/^www\./, '') + (u.port ? '-' + u.port : ''));
-  console.log(`\n  SnapTour: ${url}\n`);
+  console.log(`\n  Shipshot: ${url}\n`);
   const run = new Run(name, { mode: 'website', target: url, display: o.name || preset.title || u.host.replace(/^www\./, '') });
   await captureWebsite(run, url, { ...o, skip: preset.skip || '' });
   return finish(run, o, o.accent || preset.accent || '#ffd400');
@@ -138,7 +138,7 @@ async function main() {
 
   if (cmd === 'watch') {
     const win = rest.join(' ');
-    const run = new Run(o.name || win || 'watch', { mode: 'watch', target: win || 'any window', display: o.name || win || 'Screenshots' });
+    const run = new Run(o.name || win || 'watch', { mode: 'watch', target: win || 'any window', display: o.name || win || 'Any program' });
     // Ctrl+C is how you tell watch.py you are done; it must not stop this script before the gallery is built.
     process.on('SIGINT', () => {});
     const py = spawnSync('python', [path.join(HERE, 'watch.py'), '--out', run.dir, '--name', run.app, '--window', win], { stdio: 'inherit' });
@@ -159,7 +159,7 @@ async function main() {
   if (app) {
     app = { settle: 8000, ...app, path: expandEnv(app.path), profile: expandEnv(app.profile) };
     const name = o.name || (saved ? cmd : path.basename(app.path, '.exe'));
-    console.log(`\n  SnapTour: ${name} (desktop app)\n`);
+    console.log(`\n  Shipshot: ${name} (desktop app)\n`);
     const run = new Run(name, { mode: 'electron', target: app.path, display: o.name || app.title || name });
     await captureElectron(run, { ...app, title: app.title || name }, { ...o, size: [1600, 1000] });
     return finish(run, o, o.accent || app.accent || '#ffd400');
@@ -168,4 +168,4 @@ async function main() {
   return captureSite(target, o);
 }
 
-main().catch(e => { console.error(`\n  SnapTour error: ${e.message}\n`); process.exit(1); });
+main().catch(e => { console.error(`\n  Shipshot error: ${e.message}\n`); process.exit(1); });

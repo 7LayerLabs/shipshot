@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="shipshot-token" content="__TOKEN__">
+<title>Shipshot</title>
+<link rel="icon" href="/assets/icon.svg">
+<link rel="stylesheet" href="/ui/app.css">
+</head>
+<body>
+<div class="shell">
+  <aside class="side">
+    <a class="lockup" href="#new" aria-label="Shipshot home">
+      <img class="light" src="/assets/lockup.svg" alt="Shipshot">
+      <img class="dark" src="/assets/lockup-white.svg" alt="Shipshot">
+    </a>
+    <nav aria-label="Main">
+      <button class="nav-item" data-go="new">
+        <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>New capture
+      </button>
+      <button class="nav-item" data-go="library">
+        <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M9 10v10"/></svg>Library<span class="count" id="libCount"></span>
+      </button>
+      <button class="nav-item" data-go="apps">
+        <svg viewBox="0 0 24 24"><path d="M5 4h14v16l-7-4-7 4z"/></svg>Saved apps
+      </button>
+      <button class="nav-item" data-go="settings">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>Settings
+      </button>
+    </nav>
+    <div class="side-foot">
+      <button id="openOut">Screenshots folder</button>
+      <p id="outPath"></p>
+    </div>
+  </aside>
+
+  <main class="main">
+    <!-- New capture -->
+    <section class="view" id="view-new" hidden>
+      <div class="head"><div>
+        <h1>New capture</h1>
+        <p class="lede">Shipshot visits every page, opens tabs, menus and dialogs, and saves each screen. It never clicks buttons that change anything.</p>
+      </div></div>
+
+      <form class="panel" id="form" autocomplete="off">
+        <div class="seg" role="group" aria-label="What to capture">
+          <button type="button" data-mode="site" aria-pressed="true">Website or app</button>
+          <button type="button" data-mode="watch" aria-pressed="false">Any program</button>
+        </div>
+        <div class="row">
+          <div>
+            <label class="field-label" for="target" id="targetLabel">Address or saved app</label>
+            <input class="input big" id="target" placeholder="yoursite.com" spellcheck="false">
+          </div>
+          <div>
+            <label class="field-label" for="name">Folder name <span class="hint">(optional)</span></label>
+            <input class="input big" id="name" placeholder="Uses the site name" spellcheck="false">
+          </div>
+        </div>
+        <div class="saved" id="saved"></div>
+        <p class="hint" id="watchHint" hidden>Type part of a window title, or leave it empty for whichever window you click. Then click around that program and each new screen is saved. Press <kbd>F8</kbd> to take a shot, <kbd>F10</kbd> when you're done.</p>
+
+        <div class="section" id="shareSection">
+          <span class="field-label">Ready-to-post images</span>
+          <div class="platforms" id="platforms"></div>
+          <p class="hint">Framed and sized for each site, picked from the best screens. You'll always get every raw screenshot too.</p>
+        </div>
+
+        <details class="more" id="more">
+          <summary>More options</summary>
+          <div class="opts">
+            <label>Most pages to visit <input class="input" type="number" id="max" min="1" value="40"></label>
+            <label>Time limit in minutes <input class="input" type="number" id="minutes" min="1" value="10"></label>
+            <label>Shots per long page <input class="input" type="number" id="sections" min="0" value="10"></label>
+            <label>Phone-size shots <input type="checkbox" id="mobile" checked></label>
+            <label>Open tabs and menus <input type="checkbox" id="clicks" checked></label>
+            <label>Show the browser while it works <input type="checkbox" id="headed"></label>
+          </div>
+        </details>
+
+        <div class="actions">
+          <button class="btn primary" type="submit" id="start">Start capture</button>
+          <span class="error" id="formError" role="alert"></span>
+        </div>
+      </form>
+
+      <div class="panel" id="progress" hidden>
+        <div class="progress-top">
+          <h2 id="progTitle"></h2>
+          <span class="elapsed" id="elapsed">0:00</span>
+          <button class="btn danger" id="stop">Stop</button>
+        </div>
+        <ol class="stages" id="stages">
+          <li class="stage" data-stage="pages"><b>Pages</b><span>Waiting</span></li>
+          <li class="stage" data-stage="screens"><b>Tabs and dialogs</b><span>Waiting</span></li>
+          <li class="stage" data-stage="phone"><b>Phone shots</b><span>Waiting</span></li>
+          <li class="stage" data-stage="images"><b>Post-ready images</b><span>Waiting</span></li>
+        </ol>
+        <p class="current" id="current"></p>
+        <details class="log-wrap"><summary>Show details</summary><div class="log" id="log"></div></details>
+        <div class="finished" id="finished" hidden>
+          <p id="finishedText"></p>
+          <button class="btn" id="again">New capture</button>
+          <button class="btn primary" id="openResult">Open results</button>
+        </div>
+      </div>
+
+      <div class="section" id="recentWrap">
+        <div class="group-head"><h2>Recent</h2></div>
+        <div class="cards" id="recent"></div>
+      </div>
+    </section>
+
+    <!-- Library -->
+    <section class="view" id="view-library" hidden>
+      <div class="head">
+        <div><h1>Library</h1><p class="lede">Every capture you've made, newest first.</p></div>
+        <input class="input search" id="search" type="search" placeholder="Search by name or address" aria-label="Search the library">
+      </div>
+      <div class="cards" id="library"></div>
+    </section>
+
+    <!-- One run -->
+    <section class="view" id="view-run" hidden>
+      <button class="back" data-go="library">Library</button>
+      <div class="head">
+        <div><h1 id="runTitle"></h1><div class="facts" id="runFacts"></div></div>
+        <div style="display:flex;gap:8px">
+          <button class="btn" id="runFolder">Open folder</button>
+          <button class="btn" id="runGallery">Open in browser</button>
+          <button class="btn danger" id="runDelete">Delete</button>
+        </div>
+      </div>
+      <div class="tabs" role="tablist" id="runTabs"></div>
+      <div id="runBody"></div>
+    </section>
+
+    <!-- Settings -->
+    <section class="view" id="view-settings" hidden>
+      <div class="head"><div><h1>Settings</h1></div></div>
+      <form class="panel" id="settingsForm" autocomplete="off">
+        <label class="field-label" for="outDir">Save captures to</label>
+        <div class="pathrow">
+          <input class="input" id="outDir" spellcheck="false">
+          <button type="button" class="btn" id="browse">Browse</button>
+        </div>
+        <p class="hint" id="outHint">Each capture gets its own folder in here, named after the site and the time.</p>
+        <label class="check"><input type="checkbox" id="moveRuns" checked> Move the captures I already have to the new folder</label>
+        <div class="actions">
+          <button class="btn primary" type="submit" id="saveSettings">Save</button>
+          <button type="button" class="btn" id="resetOut">Use Desktop\Screenshots\Shipshot</button>
+          <span class="error" id="settingsMsg" role="alert"></span>
+        </div>
+      </form>
+    </section>
+
+    <!-- Saved apps -->
+    <section class="view" id="view-apps" hidden>
+      <div class="head">
+        <div><h1>Saved apps</h1><p class="lede">Websites and desktop apps you capture often. They're kept in apps.json in the Shipshot folder.</p></div>
+        <button class="btn" id="editApps">Edit apps.json</button>
+      </div>
+      <div class="cards" id="apps"></div>
+    </section>
+  </main>
+</div>
+
+<div class="viewer" id="viewer" hidden role="dialog" aria-modal="true" aria-label="Screenshot">
+  <div class="viewer-top">
+    <b id="vTitle"></b><span id="vPos"></span>
+    <button class="mini" id="vCopy">Copy</button>
+    <a class="mini" id="vSave" download>Save</a>
+    <button class="mini" id="vClose">Close</button>
+  </div>
+  <div class="viewer-stage"><img id="vImg" alt=""></div>
+  <button class="arrow prev" id="vPrev" aria-label="Previous">&#8249;</button>
+  <button class="arrow next" id="vNext" aria-label="Next">&#8250;</button>
+</div>
+<div class="toast" id="toast" hidden role="status"></div>
+<div class="confirm-back" id="confirm" hidden>
+  <div class="confirm" role="alertdialog" aria-modal="true" aria-labelledby="confirmText">
+    <p id="confirmText"></p>
+    <p class="hint" id="confirmHint"></p>
+    <div class="actions">
+      <button class="btn" id="confirmNo">Cancel</button>
+      <button class="btn primary danger-fill" id="confirmYes">Delete</button>
+    </div>
+  </div>
+</div>
+<script>window.SHARE = __SHARE__;</script>
+<script src="/ui/app.js"></script>
+</body>
+</html>

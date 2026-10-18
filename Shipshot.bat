@@ -1,20 +1,20 @@
 @echo off
-title SnapTour
+title Shipshot
 cd /d "%~dp0"
 if not exist node_modules\playwright-core call npm install --silent
 
 :menu
 cls
 echo.
-echo   SnapTour - screenshots every page of an app or website
-echo   Saves to Desktop\Screenshots\SnapTour\
+echo   Shipshot - screenshots every page of an app or website
+echo   Saves to Desktop\Screenshots\Shipshot\
 echo.
-echo   1  Open the SnapTour app window
-echo   2  A website            (menusparks.com, localhost:3001, any link)
-echo   3  A saved desktop app  (vibedeck)
+echo   1  Open the Shipshot app window
+echo   2  A website            (yoursite.com, localhost:3001, any link)
+echo   3  A saved desktop app  (from apps.json)
 echo   4  Any program          (you click around, it snaps each new screen)
 echo   5  Open the Screenshots folder
-echo   6  Put a SnapTour icon on the desktop
+echo   6  Put a Shipshot icon on the desktop
 echo   7  Quit
 echo.
 set /p pick=  Pick 1-7:
@@ -29,7 +29,7 @@ if "%pick%"=="7" exit /b
 goto menu
 
 :window
-node snaptour.mjs app
+node shipshot.mjs app
 exit /b
 
 :web
@@ -40,33 +40,33 @@ set share=
 set /p share=  Also make images for x,discord,github,linkedin,instagram,og or all (Enter = none):
 set opts=
 if not "%share%"=="" set opts=--for %share%
-if "%fname%"=="" (node snaptour.mjs %site% %opts%) else (node snaptour.mjs %site% --name "%fname%" %opts%)
+if "%fname%"=="" (node shipshot.mjs %site% %opts%) else (node shipshot.mjs %site% --name "%fname%" %opts%)
 pause
 goto menu
 
 :app
 echo.
-node snaptour.mjs list
+node shipshot.mjs list
 set /p appname=  App name:
-node snaptour.mjs %appname%
+node shipshot.mjs %appname%
 pause
 goto menu
 
 :watch
 echo.
-echo   Type part of the window's title to only shoot that app (example: VibeDeck),
+echo   Type part of the window's title to only shoot that app (example: Photoshop),
 echo   or just press Enter to shoot whatever window you click on.
 set /p win=  Window title:
 set /p fname=  Folder name (Enter = use the window title):
-if "%fname%"=="" (node snaptour.mjs watch %win%) else (node snaptour.mjs watch %win% --name "%fname%")
+if "%fname%"=="" (node shipshot.mjs watch %win%) else (node shipshot.mjs watch %win% --name "%fname%")
 pause
 goto menu
 
 :folder
-node snaptour.mjs folder
+node shipshot.mjs folder
 goto menu
 
 :install
-node snaptour.mjs install
+node shipshot.mjs install
 pause
 goto menu

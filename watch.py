@@ -1,6 +1,6 @@
-"""SnapTour watch mode: works with ANY program on the PC.
+"""Shipshot watch mode: works with ANY program on the PC.
 
-You click around the app yourself. A moment after every click SnapTour photographs the
+You click around the app yourself. A moment after every click Shipshot photographs the
 window in front (just that window, not the whole screen) and skips it if nothing changed.
   F8  = take a shot right now
   F10 = finished (Ctrl+C in this window works too)

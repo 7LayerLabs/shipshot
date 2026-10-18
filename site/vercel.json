@@ -1,0 +1,12 @@
+{
+  "cleanUrls": true,
+  "redirects": [
+    { "source": "/", "destination": "/shipshot", "permanent": false }
+  ],
+  "headers": [
+    {
+      "source": "/shipshot/(img|fonts)/(.*)",
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=604800" }]
+    }
+  ]
+}
