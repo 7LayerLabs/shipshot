@@ -74,8 +74,8 @@ function setMode(m) {
   mode = m;
   for (const b of document.querySelectorAll('[data-mode]')) b.setAttribute('aria-pressed', String(b.dataset.mode === m));
   const watch = m === 'watch';
-  $('targetLabel').textContent = watch ? 'Window title (optional)' : 'Address or saved app';
-  $('target').placeholder = watch ? 'Photoshop' : 'yoursite.com';
+  $('targetLabel').textContent = watch ? 'Window title (optional)' : 'Website, GitHub link or saved app';
+  $('target').placeholder = watch ? 'Photoshop' : 'yoursite.com or github.com/you/app';
   $('watchHint').hidden = !watch;
   $('saved').hidden = watch;
   $('more').hidden = watch;
@@ -95,6 +95,15 @@ $('form').addEventListener('submit', async e => {
   const share = [...document.querySelectorAll('[name=share]:checked')].map(c => c.value);
   store.set('share', share);
   const body = { mode, target: $('target').value, name: $('name').value, share };
+  if (mode === 'site') {
+    // A GitHub repo with no live site gets downloaded and run here, so ask first.
+    const repo = await api('/api/repo', { target: body.target });
+    if (repo.error) { $('formError').textContent = repo.error; return; }
+    if (repo.repo && !repo.live) {
+      if (!await ask(`Run ${repo.repo} on this PC?`, 'It has no live website, so Shipshot downloads the code, installs it and starts it here to take the screenshots. Only do this for code you trust.', 'Run it')) return;
+      body.runRepo = true;
+    }
+  }
   for (const f of FIELDS) { const el = $(f); body[f] = el.type === 'checkbox' ? el.checked : el.value; store.set(f, body[f]); }
   const r = await api('/api/start', body);
   if (r.error) { $('formError').textContent = r.error; return; }
@@ -118,6 +127,7 @@ function take(lines) {
     else if (/^making \d+ promo/.test(l)) { job.stage = 'images'; job.last = 'Framing images for posting'; }
     else if ((m = l.match(/^Done\. (\d+) screenshots/))) job.shots = +m[1];
     else if (/^skip/.test(l)) job.last = l;
+    else if ((m = l.match(/^repo: (.*)$/))) job.last = m[1];
     $('log').append(h('div', {}, l));
   }
   const log = $('log');

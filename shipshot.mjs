@@ -8,6 +8,7 @@ import { fileURLToPath } from 'node:url';
 import { Run } from './lib/run.mjs';
 import { captureWebsite, normalize } from './lib/web.mjs';
 import { captureElectron } from './lib/electron.mjs';
+import { parseRepo, prepareRepo } from './lib/github.mjs';
 import { buildOutputs, SHARE } from './lib/gallery.mjs';
 import { OUT_ROOT, slug } from './lib/common.mjs';
 
@@ -21,6 +22,7 @@ const HELP = `
   shipshot <website>              yoursite.com, https://..., http://localhost:3001
   shipshot <saved app>            myapp      (desktop apps and websites listed in apps.json)
   shipshot <electron folder|exe>  any Electron app folder
+  shipshot <github link>          github.com/owner/repo: its live site, or (with --run-repo) the app run on this PC
   shipshot watch [window title]   ANY program: you click around, it snaps each new screen
   shipshot list                   show saved apps and past runs
   shipshot gallery <run folder>   rebuild the gallery, promo and share images for a run
@@ -41,6 +43,7 @@ const HELP = `
     --no-promo        skip the promo images and contact sheets
     --accent <color>  promo and gallery color (default #ffd400)
     --headed          show the browser while it works
+    --run-repo        for a GitHub link with no live site: download the repo and run it here (only for code you trust)
     --no-open         do not open the gallery when finished
 
   Output: ${OUT_ROOT}\\<name>\\<date_time>\\
@@ -64,6 +67,7 @@ function parseArgs(argv) {
     else if (a === '--no-promo') o.promo = false;
     else if (a === '--no-open') o.open = false;
     else if (a === '--headed') o.headed = true;
+    else if (a === '--run-repo') o.runRepo = true;
     else if (a === '-h' || a === '--help') o.help = true;
     else o._.push(a);
   }
@@ -110,7 +114,7 @@ async function captureSite(target, o, preset = {}) {
   const u = new URL(url);
   const name = o.name || preset.folder || slug(u.hostname.replace(/^www\./, '') + (u.port ? '-' + u.port : ''));
   console.log(`\n  Shipshot: ${url}\n`);
-  const run = new Run(name, { mode: 'website', target: url, display: o.name || preset.title || u.host.replace(/^www\./, '') });
+  const run = new Run(name, { mode: 'website', target: preset.source || url, display: o.name || preset.title || u.host.replace(/^www\./, '') });
   await captureWebsite(run, url, { ...o, skip: preset.skip || '' });
   return finish(run, o, o.accent || preset.accent || '#ffd400');
 }
@@ -149,8 +153,15 @@ async function main() {
 
   const apps = loadApps();
   const target = [cmd, ...rest].join(' ');
-  const saved = apps[cmd.toLowerCase()];
-  if (saved?.type === 'website') return captureSite(saved.url, o, { ...saved, folder: cmd });
+  let saved = apps[cmd.toLowerCase()], folder = cmd;
+  const repo = parseRepo(target);
+  if (repo) {
+    const found = await prepareRepo(repo, o);
+    folder = slug(repo.name);
+    if (found.kind === 'electron') saved = { type: 'electron', path: found.path, title: found.title };
+    else try { return await captureSite(found.url, o, { folder, title: found.title, source: repo.url }); } finally { found.stop?.(); }
+  }
+  if (saved?.type === 'website') return captureSite(saved.url, o, { ...saved, folder });
   let app = saved;
   if (!app && fs.existsSync(target) && (fs.existsSync(path.join(target, 'package.json')) || /\.exe$/i.test(target))) {
     app = { type: 'electron', path: target, settle: 8000 };
@@ -158,7 +169,7 @@ async function main() {
 
   if (app) {
     app = { settle: 8000, ...app, path: expandEnv(app.path), profile: expandEnv(app.profile) };
-    const name = o.name || (saved ? cmd : path.basename(app.path, '.exe'));
+    const name = o.name || (saved ? folder : path.basename(app.path, '.exe'));
     console.log(`\n  Shipshot: ${name} (desktop app)\n`);
     const run = new Run(name, { mode: 'electron', target: app.path, display: o.name || app.title || name });
     await captureElectron(run, { ...app, title: app.title || name }, { ...o, size: [1600, 1000] });

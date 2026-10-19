@@ -1,3 +1,39 @@
+# DONE 2026-10-19: paste a GitHub link; app screenshots
+
+Derek: "paste a GitHub link and get shots as well instead of just web links or applications." Approved 2026-10-19: running repo code behind a confirm is OK; private repos out; publish to the public repo.
+
+Before: a github.com link was treated as a website, so Shipshot crawled github.com itself.
+
+### 1. Repo has a live site (nothing runs on your PC)
+- [x] GitHub public API (no key): the repo's "Website" field, else its GitHub Pages address; used if it answers. README scanning dropped (homepage + Pages covered every test repo).
+
+### 2. No live site: download and run it locally
+- [x] `git clone --depth 1` into `%LOCALAPPDATA%\Shipshot\repos\<owner>-<repo>`; next time fetch + reset to the latest commit.
+- [x] Node app at the top or one folder down (frontend/, web/, client/, app/ first): `npm install`, then Electron (in deps or in a script; installs Electron if missing, runs its download step if npm skipped it, `npm run build` if the main file is not built) or the `dev`/`start`/`serve`/`preview` script on a free port, waiting for the localhost address it prints.
+- [x] Plain HTML (`index.html` at the root, docs/, public/, dist/, build/, site/): served from a local port.
+- [x] Before capturing a dev server, opens it once: a Vite or Next.js error screen stops the run with the error and a pointer to `.env.example` (an app needing Supabase keys was being photographed as an error page).
+- [x] Anything else (Python...) and unbuildable Electron apps: clear message. Dev servers are killed (whole process tree) when the capture ends or fails.
+- [x] Safety: the app checks the repo first (`/api/repo`) and only asks "Run owner/repo on this PC?" when there is no live site; the command line needs `--run-repo`.
+
+### 3. App and docs
+- [x] Address box: "Website, GitHub link or saved app". Progress line shows Looking up / Downloading / Installing packages / Starting the app. (No extra stage cards; the line was enough.)
+- [x] Help, README (GitHub links section, Setup needs Git, Safety, "accounts and keys"), landing page FAQ + "How it works". Landing page not redeployed.
+
+### 4. Check it (all on 2026-10-19, isolated LOCALAPPDATA/SHIPSHOT_OUT)
+- [x] Live site (SafdarJamal/vite-template-react, surge.sh) 1 shot. GitHub Pages (Shamim-hossain12/Simple-landing-page-html-css).
+- [x] Vite app run locally (turingschool-examples/vite-react-starter) 71s first time, ~13s after. Next.js in frontend/ (ojasskapre/nextjs-starter-template): stops with the Supabase error + .env.example hint. Plain HTML (devyverse/Lpage). Electron (nasha-wanich/electron-app-template). Unbuildable Electron (akinoccc/electron-vite-react-starter) and Python (bstocker/flask_hello_world): clear messages. Missing repo and no `--run-repo`: clear messages. No dev server left running after any of them.
+- [x] App window: confirm shows for a repo with no site, Cancel starts nothing, Run it shows each step then finishes.
+
+### App screenshots for showing it off
+- [x] `assets/screenshots/`: 10 screens x light/dark at 2560x1600 (new capture, capture in progress, finding pages, ready-to-post images, every screen, phone screens, promo images, full-size viewer, library, saved apps). Taken from a clean copy with demo data (no personal paths). README shows the ready-to-post one (light/dark).
+- [ ] The library shot shows DBTech45 twice (two demo captures). Retake after deleting the extra demo run, if Derek wants.
+
+### Review
+- New `lib/github.mjs` (parseRepo, liveSite, prepareRepo). `shipshot.mjs` routes GitHub links before saved apps; `captureSite` records the repo URL as the run's target. `lib/app.mjs`: `/api/repo`, `--run-repo`. `ui/app.js`: check + confirm, progress lines. `lib/electron.mjs`: `cleanEnv` exported.
+- Not done: private repos (Derek: out), Python/other stacks, apps needing `.env` settings (stopped with a message instead).
+
+---
+
 # Shipshot rebrand, pro look, landing site, giveaway publishing (2026-10-18; built, waiting on the dbtech45 GitHub login)
 
 Decided with Derek: name is **Shipshot** (a different product, "Shipshots" at shipshots.app, makes App Store images; small confusion risk accepted). Scope is a polished app + marketing site, no accounts/billing. No domain for now (useshipshot.com $11.25/yr, shipshot.co $29.99 then $24.80/yr); the page lives at dbtech45.com/shipshot. Shipshot is given away free.
