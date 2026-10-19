@@ -1,4 +1,4 @@
-# Shipshot rebrand, pro look, landing site (2026-10-18; built, waiting for Derek's OK to push and deploy)
+# Shipshot rebrand, pro look, landing site, giveaway publishing (2026-10-18; built, waiting on the dbtech45 GitHub login)
 
 Decided with Derek: name is **Shipshot** (a different product, "Shipshots" at shipshots.app, makes App Store images; small confusion risk accepted). Scope is a polished app + marketing site, no accounts/billing. No domain for now (useshipshot.com $11.25/yr, shipshot.co $29.99 then $24.80/yr); the page lives at dbtech45.com/shipshot. Shipshot is given away free.
 
@@ -10,7 +10,8 @@ Decided with Derek: name is **Shipshot** (a different product, "Shipshots" at sh
 - [x] `shipshot.mjs`, `Shipshot.bat`, help, README, package.json (`bin`, description). New `Setup.bat`: checks for Node.js (opens nodejs.org if missing), npm install, shortcuts, opens the app.
 - [x] Output `Desktop\Screenshots\Shipshot`; the old SnapTour folder moves over by itself (Derek's soulclaw-co run moved fine). `SNAPTOUR_OUT` still read. App data `%LOCALAPPDATA%\Shipshot`.
 - [x] Desktop and Start-menu shortcuts replaced; `install` removes the old SnapTour ones.
-- [ ] Rename the GitHub repo to `7LayerLabs/shipshot`. Not done: waits for Derek's OK with the push. Local folder `C:\Users\Derek\snaptour` keeps its name for now.
+- [x] ~~Rename 7LayerLabs/snaptour~~ Replaced by Derek's plan: the public home is the new GitHub user **dbtech45**, repo `dbtech45/Shipshot` (Derek created it, public, empty, description set). 7LayerLabs/snaptour stays the dev repo (Derek to decide on making it private). Local folder `C:\Users\Derek\snaptour` keeps its name.
+- [x] Bug: shortcut and Screenshots folder went to `OneDrive\Desktop` (a leftover folder Windows does not show; the real desktop is `C:\Users\Derek\Desktop`). `desktopDir()` now reads the registry; captures moved to `C:\Users\Derek\Desktop\Screenshots\Shipshot`; install removes the misplaced shortcut.
 
 ### 3. App looks like a product
 - [x] Sidebar: New capture, Library (search), Saved apps, Settings. UI is now real files: `ui/index.html`, `ui/app.css`, `ui/app.js` (was a generated string in `lib/app-ui.mjs`, deleted). Light and dark.
@@ -25,15 +26,26 @@ Decided with Derek: name is **Shipshot** (a different product, "Shipshots" at sh
 ### 4. Landing page at dbtech45.com/shipshot
 - [x] `site/shipshot/` static page (hero app shot, long page vs ten readable screens, X/Instagram/Discord/GitHub images, how it works, safety, FAQ, download). All images real, from a dbtech45.com capture (664 KB). Checked at 1440 and 390 wide, no sideways scroll.
 - [x] Deployed as its own Vercel project `shipshot` (team thetradingdads-projects): https://shipshot-chi.vercel.app/shipshot. Deploy from a git-less copy (`vercel deploy --prod` in a folder copied from `site/`).
-- [x] dbtech45.com repo (`C:/Users/Derek/orca/dbtech45.com`, pulled to f1c12e4): `/shipshot` rewrites in `next.config.ts` + Shipshot listing in AI & creative tools (`src/data/studio-projects.ts`), same pattern as Fine Print. UNCOMMITTED. Pushing master auto-deploys the live site.
+- [x] dbtech45.com repo (`C:/Users/Derek/orca/dbtech45.com`): `/shipshot` rewrites in `next.config.ts`, Shipshot listing in AI & creative tools linking to github.com/dbtech45/Shipshot (`src/data/studio-projects.ts`), logo `public/studio/shipshot-lockup.svg` in the `projectLogos` map. On branch `shipshot-listing` (pushed, commits c0a3f3b + fc52691); preview build READY and checked (logo row + /shipshot). Not on master yet = not live.
+- [x] Vercel blocked the first preview because this PC's git identity is "Milo"; deploying commits must be authored by 7LayerLabs. Set repo-local `user.name 7LayerLabs`, `user.email 222900153+7LayerLabs@users.noreply.github.com` in the dbtech45 repo.
+
+### 4b. Giveaway publishing (Derek, 2026-10-18)
+- [x] No subscriptions or keys: Shipshot uses no online service. README says so ("Your accounts and keys").
+- [x] Personal bits kept out of the public copy: `.gitattributes` export-ignore for `tasks/` and `apps.json`; `apps.example.json` ships instead (the app copies it to apps.json on first "Edit apps.json"). Neutral examples (yoursite.com, myapp). Secret scan: nothing found.
+- [x] `tools/publish.mjs "what changed"`: `git archive HEAD` -> `%LOCALAPPDATA%\Shipshot\public-repo` -> commit as DBTech45 -> push to dbtech45/Shipshot using `gh auth token --user dbtech45` (passed through env, not the command line). Needs a committed tree.
+- [x] `assets/github-social-preview.png` (1280x640) for the repo's Settings -> Social preview (GitHub has no API for it; Derek uploads by hand).
 
 ### 5. Check it
 - [x] Full capture with the final code (test site 22s, all screens, off-site skip). App launched from the new shortcut path; every view screenshotted light and dark; no page errors.
 - [ ] Derek: try Browse in Settings, paste a copied image into Discord/X, run Setup.bat on a clean folder after the push.
 
-### Waiting on Derek
-1. Commit + push `shipshot-rebrand`, merge PR #1 and this into main, rename the repo to `shipshot`. The page's Download link is `github.com/7LayerLabs/shipshot/archive/refs/heads/main.zip`, which needs both.
-2. Commit + push the dbtech45 change (it goes live).
+### Next steps, in order
+1. Derek logs the GitHub CLI into **dbtech45**: `gh auth login --hostname github.com --git-protocol https --web`, code at github.com/login/device signed in as dbtech45 (the first code expired). Check with `gh auth status`.
+2. `node tools/publish.mjs "Shipshot 1.0"`, then check github.com/dbtech45/Shipshot and that `.../archive/refs/heads/main.zip` downloads and contains Setup.bat but no tasks/ or apps.json.
+3. Merge `shipshot-listing` into master in the dbtech45 repo and push (goes live). Check dbtech45.com homepage row and dbtech45.com/shipshot.
+4. Derek uploads `assets/github-social-preview.png` as the repo's social preview.
+5. Open questions for Derek: make 7LayerLabs/snaptour private? Add an MIT licence?
+6. The shipshot-rebrand branch (4 commits) is local only; push it to the dev repo once Derek decides on 5.
 
 ---
 
