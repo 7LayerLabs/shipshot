@@ -10,7 +10,7 @@ Decided with Derek: name is **Shipshot** (a different product, "Shipshots" at sh
 - [x] `shipshot.mjs`, `Shipshot.bat`, help, README, package.json (`bin`, description). New `Setup.bat`: checks for Node.js (opens nodejs.org if missing), npm install, shortcuts, opens the app.
 - [x] Output `Desktop\Screenshots\Shipshot`; the old SnapTour folder moves over by itself (Derek's soulclaw-co run moved fine). `SNAPTOUR_OUT` still read. App data `%LOCALAPPDATA%\Shipshot`.
 - [x] Desktop and Start-menu shortcuts replaced; `install` removes the old SnapTour ones.
-- [x] ~~Rename 7LayerLabs/snaptour~~ Replaced by Derek's plan: the public home is the new GitHub user **dbtech45**, repo `dbtech45/Shipshot` (Derek created it, public, empty, description set). 7LayerLabs/snaptour stays the dev repo (Derek to decide on making it private). Local folder renames to `C:\Users\Derek\shipshot` (Derek, 2026-10-18): nothing in the code uses the folder path, only the two shortcuts, which `node shipshot.mjs install` rebuilds. Claude memory already copied to `.claude\projects\C--Users-Derek-shipshot`.
+- [x] ~~Rename 7LayerLabs/snaptour~~ Replaced by Derek's plan: the public home is the new GitHub user **dbtech45**, repo `dbtech45/Shipshot` (Derek created it, public, empty, description set). The dev repo is renamed 7LayerLabs/snaptour -> **7LayerLabs/shipshot** (Derek, 2026-10-18; old URL redirects, local remote updated) and stays the dev repo (Derek to decide on making it private). Local folder renames to `C:\Users\Derek\shipshot` (Derek, 2026-10-18): nothing in the code uses the folder path, only the two shortcuts, which `node shipshot.mjs install` rebuilds. Claude memory already copied to `.claude\projects\C--Users-Derek-shipshot`.
 - [x] Bug: shortcut and Screenshots folder went to `OneDrive\Desktop` (a leftover folder Windows does not show; the real desktop is `C:\Users\Derek\Desktop`). `desktopDir()` now reads the registry; captures moved to `C:\Users\Derek\Desktop\Screenshots\Shipshot`; install removes the misplaced shortcut.
 
 ### 3. App looks like a product
@@ -44,7 +44,7 @@ Decided with Derek: name is **Shipshot** (a different product, "Shipshots" at sh
 2. `node tools/publish.mjs "Shipshot 1.0"`, then check github.com/dbtech45/Shipshot and that `.../archive/refs/heads/main.zip` downloads and contains Setup.bat but no tasks/ or apps.json.
 3. Merge `shipshot-listing` into master in the dbtech45 repo and push (goes live). Check dbtech45.com homepage row and dbtech45.com/shipshot.
 4. Derek uploads `assets/github-social-preview.png` as the repo's social preview.
-5. Open questions for Derek: make 7LayerLabs/snaptour private? Add an MIT licence?
+5. Open questions for Derek: make 7LayerLabs/shipshot private? Add an MIT licence?
 6. The shipshot-rebrand branch (4 commits) is local only; push it to the dev repo once Derek decides on 5.
 
 ---
