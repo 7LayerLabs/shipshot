@@ -10,7 +10,7 @@ Decided with Derek: name is **Shipshot** (a different product, "Shipshots" at sh
 - [x] `shipshot.mjs`, `Shipshot.bat`, help, README, package.json (`bin`, description). New `Setup.bat`: checks for Node.js (opens nodejs.org if missing), npm install, shortcuts, opens the app.
 - [x] Output `Desktop\Screenshots\Shipshot`; the old SnapTour folder moves over by itself (Derek's soulclaw-co run moved fine). `SNAPTOUR_OUT` still read. App data `%LOCALAPPDATA%\Shipshot`.
 - [x] Desktop and Start-menu shortcuts replaced; `install` removes the old SnapTour ones.
-- [x] ~~Rename 7LayerLabs/snaptour~~ Replaced by Derek's plan: the public home is the new GitHub user **dbtech45**, repo `dbtech45/Shipshot` (Derek created it, public, empty, description set). 7LayerLabs/snaptour stays the dev repo (Derek to decide on making it private). Local folder `C:\Users\Derek\snaptour` keeps its name.
+- [x] ~~Rename 7LayerLabs/snaptour~~ Replaced by Derek's plan: the public home is the new GitHub user **dbtech45**, repo `dbtech45/Shipshot` (Derek created it, public, empty, description set). 7LayerLabs/snaptour stays the dev repo (Derek to decide on making it private). Local folder renames to `C:\Users\Derek\shipshot` (Derek, 2026-10-18): nothing in the code uses the folder path, only the two shortcuts, which `node shipshot.mjs install` rebuilds. Claude memory already copied to `.claude\projects\C--Users-Derek-shipshot`.
 - [x] Bug: shortcut and Screenshots folder went to `OneDrive\Desktop` (a leftover folder Windows does not show; the real desktop is `C:\Users\Derek\Desktop`). `desktopDir()` now reads the registry; captures moved to `C:\Users\Derek\Desktop\Screenshots\Shipshot`; install removes the misplaced shortcut.
 
 ### 3. App looks like a product
