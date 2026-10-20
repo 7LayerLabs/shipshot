@@ -27,6 +27,7 @@ const HELP = `
   options
     --name <folder>   name of the folder inside Screenshots\\SnapTour (default: site or app name)
     --max <n>         most pages to visit on a website (default 40)
+    --per-layout <n>  pages to shoot that share one layout, like /game/123 (default 3)
     --depth <n>       how many clicks deep to explore each page (default 2)
     --minutes <n>     time limit (default 10)
     --no-clicks       only visit pages, do not click tabs and menus
@@ -34,17 +35,21 @@ const HELP = `
     --no-full         skip the full-length page shots
     --no-promo        skip the promo images
     --headed          show the browser while it works
+    --allow-writes    let the site save things (blocked by default: only page loads go through)
+    --blur <css>      blur private text before each photo: CSS selectors, or @file with one per line
+                      (saved lists live in blur\, e.g. --blur @blur\dbtech-hq.txt)
     --no-open         do not open the gallery when finished
 
   Output: ${OUT_ROOT}\\<name>\\<date_time>\\
 `;
 
 function parseArgs(argv) {
-  const o = { _: [], max: 40, depth: 2, minutes: 10, clicks: true, mobile: true, full: true, promo: true, open: true, headed: false, maxScreens: 40, mobileMax: 12 };
+  const o = { _: [], max: 40, depth: 2, minutes: 10, clicks: true, mobile: true, full: true, promo: true, open: true, headed: false, maxScreens: 40, mobileMax: 12, perTemplate: 3 };
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
     if (a === '--name') o.name = argv[++i];
     else if (a === '--max') o.max = +argv[++i];
+    else if (a === '--per-layout') o.perTemplate = +argv[++i];
     else if (a === '--depth') o.depth = +argv[++i];
     else if (a === '--minutes') o.minutes = +argv[++i];
     else if (a === '--accent') o.accent = argv[++i];
@@ -54,10 +59,20 @@ function parseArgs(argv) {
     else if (a === '--no-promo') o.promo = false;
     else if (a === '--no-open') o.open = false;
     else if (a === '--headed') o.headed = true;
+    else if (a === '--allow-writes') o.allowWrites = true;
+    else if (a === '--blur') o.blur = readBlur(argv[++i]);
     else if (a === '-h' || a === '--help') o.help = true;
     else o._.push(a);
   }
   return o;
+}
+
+// "@blur/site.txt" -> that file's selectors (one per line, # comments); anything else is used as is.
+function readBlur(arg) {
+  if (!arg) return '';
+  if (!arg.startsWith('@')) return arg;
+  const file = path.resolve(HERE, arg.slice(1));
+  return fs.readFileSync(file, 'utf8').split(/\r?\n/).map(l => l.replace(/#.*/, '').trim()).filter(Boolean).join(', ');
 }
 
 function loadApps() {

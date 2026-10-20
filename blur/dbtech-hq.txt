@@ -1,0 +1,86 @@
+# DBTech HQ (dbtech45.com/hq): private text to blur for public screenshots.
+# Headings, menus, labels, scores and charts stay sharp so the layout still reads.
+
+# Today
+.today-problem-title
+.today-problem-fix
+.today-problem-project
+.today-card-title
+.today-chip
+.today-idea-title
+.today-idea-pitch
+.today-feed-text
+.scan-row-title
+.scan-row-text
+.scan-sub-name
+.scan-sub-meta
+
+# Projects
+.pj-name
+.pj-link
+.pj-row-url
+.pj-row-repo
+.pj-summary
+.pj-row-sub
+.pjd-notes
+.pjd-domain
+.pjd-commit
+.pjd-summary
+.pjd-kv dd
+.pjd-ship li span:last-child
+.pjd-links
+main:has(.pjd-back) .hq-title
+.pjd-titlerow .pjd-ext
+.hq-textarea
+
+# Kanban
+.kb-card-title
+.kb-card-meta
+.kb-label
+.kb-notes-preview
+.kb-source
+
+# Ideas
+.ideas-row-title
+.ideas-change-title
+.ideas-sheet-meta
+
+# Map
+.map-node-name
+.map-zone[data-zone*="vercel"] .map-zone-label
+.map-zone[data-zone*="vercel"] .map-zone-sub
+.map-node-host
+.map-node-text
+.map-panel-title
+.map-panel-meta
+.map-link-name
+.map-problem-title
+.map-problem-fix
+.map-domain-url
+.map-domain-note
+.map-notes
+.map-search-name
+.map-search-host
+
+# Notes
+.hqn-tree-name
+.hqn-home-row-name
+.hqn-backlink-name
+.hqn-docmeta
+
+# X Studio
+.x-thread-text
+.x-post-name
+
+# Analytics
+.an-site-name
+.an-item-label
+.an-item-text
+.an-switch-name
+.an-switch-domain
+.an-waiting-name
+.an-waiting-domain
+
+# Shared rows
+.hq-row-title
+.hq-row-meta
